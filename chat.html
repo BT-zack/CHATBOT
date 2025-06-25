@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; }
+        #chatbox { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; }
+        .user { font-weight: bold; }
+        .bot { color: green; }
+    </style>
+</head>
+<body>
+    <h2>Soft Power Thailand Chatbot</h2>
+    <div id="chatbox"></div>
+    <input type="text" id="userInput" placeholder="Type your message..." />
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value;
+            const chatbox = document.getElementById('chatbox');
+            chatbox.innerHTML += "<div class='user'>You: " + message + "</div>";
+
+            const response = await fetch('/api/message', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message })
+            });
+            const data = await response.json();
+            chatbox.innerHTML += "<div class='bot'>Bot: " + data.reply + "</div>";
+            chatbox.scrollTop = chatbox.scrollHeight;
+            input.value = "";
+        }
+    </script>
+</body>
+</html>
